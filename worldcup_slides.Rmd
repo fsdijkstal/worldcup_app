@@ -1,0 +1,43 @@
+---
+title: "Course Project: Shiny Application & Reproducible Pitch"
+author: "Felix Dijkstal"
+date: '2022-12-28'
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Introduction
+These slides were prepared for the course project of the Developing Data Products course on Coursera. 
+
+The purpose of these slides is to present a Shiny application that was developed as part of the course project. 
+
+## The Application
+The application I developed gives an estimation of the result of a world cup game between to national football teams based on historical data. The application takes into account all games played during FIFA world cups from 1930 to 2018 and summarizes the proportion of games won by each team. Instances where games ended in a draw without a winner will appear as 'null'. 
+
+## Using the app
+The app can be accessed at: https://felixdijkstal.shinyapps.io/worldcup/ 
+
+The user only needs to select the two teams for which they would like to see the likelihood of each team winning based on past performance. The next slides gives an example of the chart generated for a game between Argentina and France. 
+
+## Plot
+```{r, message=FALSE, warning=FALSE,}
+library(plotly)
+library(dplyr)
+library(janitor)
+
+temp = read.csv('~/worldcup/wcmatches.csv')
+
+plot_data = temp %>%
+      filter((home_team == 'France' | away_team == 'France') & (home_team == 'Argentina' | away_team == 'Argentina')) %>%
+      tabyl(winning_team)
+
+plot_ly(plot_data, labels = ~winning_team, values = ~percent, type = 'pie')
+
+```
+
+
+## Data
+The data were retrieved from Kaggle and can be found here: https://www.kaggle.com/datasets/evangower/fifa-world-cup?resource=download 
